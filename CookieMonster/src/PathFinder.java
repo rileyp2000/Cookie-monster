@@ -23,7 +23,7 @@ public class PathFinder {
 	}
 	
 	public Point[][] createGrid(Scanner fileGrid){
-		Point[] curRow = new Point[];
+		Point[] curRow = new Point[] {};
 		
 	}
 	
