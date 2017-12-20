@@ -30,6 +30,21 @@ public class PathFinder {
 		System.out.println("The Max number of possible cookies is: " + run());
 	}
 	
+	/**
+	 * 
+	 * @return Returns a copy of the point to the right of the current one
+	 */
+	public Point peekRight(){
+		return new Point(grid[current.getR()][current.getC()+1]);
+	}
+	
+	/**
+	 * 
+	 * @return Returns a copy of the point under the current one
+	 */
+	public Point peekDown(){
+		return new Point(grid[current.getR()+1][current.getC()]);
+	}
 	
 	public int run(){
 		boolean ifTerminated;
@@ -65,12 +80,59 @@ public class PathFinder {
 		return cookieMax;
 	}
 	
+	/**
+	 * 
+	 * @return 0 if down, 1 if right, -1 if not possible for next moves
+	 */
 	public int determineNext(){
-		
+		int downVal,rightVal;
+		try{
+			downVal = grid[current.getR()+1][current.getC()].getVal();
+		}
+		catch(IndexOutOfBoundsException e){
+			downVal = -1;
+		}
+
+		try{
+			rightVal = grid[current.getR()][current.getC()+1].getVal();
+		}
+		catch(IndexOutOfBoundsException e){
+			rightVal = -1;
+		}
+
+		if(downVal == -1 && rightVal == -1)
+			return -1;
+		if(downVal > rightVal)
+			return 0;
+		else
+			return 1;
 	}
 	
 	public boolean moveNext(){
+		numCookies += current.getVal();
 		
+		if(determineNext() == -1)
+			return true;
+		
+		if(determineNext() == 0 && peekRight().getVal() != -1){
+			junctions.push(peekRight());
+			current = peekDown();
+		}
+		else{
+			if(determineNext() == 0)
+				current = peekDown();
+			else{
+				if(determineNext() == 1 && peekDown().getVal() != -1){
+					junctions.push(peekDown());
+					current = peekRight();
+				}
+				else{
+					if(determineNext() == 1)
+						current = peekRight();
+				}
+			}
+		}
+		return false;	
 	}
 	
 	

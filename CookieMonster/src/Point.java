@@ -1,11 +1,17 @@
 
 public class Point {
-	int r,c,val;
+	private int r,c,val;
 	
 	public Point(int row, int col, int value) {
 		r = row;
 		c = col;
 		val = value;
+	}
+	
+	public Point(Point p){
+		r = p.getR();
+		c = p.getC();
+		val = p.getVal();
 	}
 
 	/**
