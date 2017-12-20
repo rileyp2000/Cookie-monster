@@ -1,4 +1,8 @@
-
+/**
+ * this represents a point in the grid of numbers
+ * @author Patrick
+ *
+ */
 public class Point {
 	private int r,c,val;
 	

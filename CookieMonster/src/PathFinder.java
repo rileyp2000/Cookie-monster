@@ -1,9 +1,14 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Scanner;
-
+/**
+ * this is where the best path gets determined
+ * @author Patrick
+ *
+ */
 public class PathFinder {
 	private Point[][] grid;
 	private LinkedList<Point> junctions;
@@ -24,8 +29,7 @@ public class PathFinder {
 		GOAL = grid[grid.length-1][grid[0].length-1];
 		current = grid[0][0];
 		numCookies = 0;
-		@SuppressWarnings("unused")
-		ArrayList<Integer> maxCookies = new ArrayList<Integer>();
+		maxCookies = new ArrayList<Integer>();
 		junctions = new LinkedList<Point>();
 		
 		System.out.println("The Max number of possible cookies is: " + run());
@@ -38,7 +42,14 @@ public class PathFinder {
 	 * @return Returns a copy of the point to the right of the current one
 	 */
 	public Point peekRight(){
-		return new Point(grid[current.getR()][current.getC()+1]);
+		Point ret;
+		try{
+			ret = new Point(grid[current.getR()][current.getC()+1]);
+		}
+		catch(IndexOutOfBoundsException e){
+			ret = new Point(-1,-1,-1);
+		}
+		return ret;
 	}
 	
 	/**
@@ -46,7 +57,15 @@ public class PathFinder {
 	 * @return Returns a copy of the point under the current one
 	 */
 	public Point peekDown(){
-		return new Point(grid[current.getR()+1][current.getC()]);
+		Point ret;
+		try{
+			ret = new Point(grid[current.getR()+1][current.getC()]);
+		}
+		catch(IndexOutOfBoundsException e){
+			ret = new Point(-1,-1,-1);
+		}
+		return ret;
+	 
 	}
 	
 	public int run(){
@@ -89,20 +108,29 @@ public class PathFinder {
 	 */
 	public int determineNext(){
 		int downVal,rightVal;
-		try{
+		/*try{
 			downVal = grid[current.getR()+1][current.getC()].getVal();
 		}
 		catch(IndexOutOfBoundsException e){
 			downVal = -1;
-		}
+		}*/
+		if(peekDown().getC() == -1)
+			downVal = -1;
+		else
+			downVal = peekDown().getVal();
 
-		try{
+		/*try{
 			rightVal = grid[current.getR()][current.getC()+1].getVal();
 		}
 		catch(IndexOutOfBoundsException e){
 			rightVal = -1;
-		}
-
+		}*/
+		if(peekRight().getC() == -1)
+			rightVal = -1;
+		else
+			rightVal = peekRight().getVal();
+		
+		
 		if(downVal == -1 && rightVal == -1)
 			return -1;
 		if(downVal > rightVal)
@@ -164,23 +192,28 @@ public class PathFinder {
 	 * @return a 2D array of ints that represents the maze
 	 */
 	public int[][] createGrid(Scanner fileGrid){
-		int[][] ret = new int[][]{};
 		String line;
-		int rowNum = 0;
+		
+		ArrayList<int[]> temp = new ArrayList<int[]>();
 		while (fileGrid.hasNextLine()){
 	    
 	      line = fileGrid.nextLine();
-	      String[] unparsed = line.split(" ");
-	      int[] row = new int[unparsed.length];
+//	      String[] unparsed = line.split(" ");
+	      ArrayList<String> unparsed = new ArrayList<String>(Arrays.asList(line.split(" ")));
+	      for(int i = unparsed.size()-1; i>=0; i--)
+	    	  if(unparsed.get(i).equals(""))
+	    		  unparsed.remove(i);
 	      
-	      for(int i = 0; i < unparsed.length; i++){
-	    	  row[i] = Integer.parseInt(unparsed[i]);
+	      int[] row = new int[unparsed.size()];
+	      
+	      for(int i = 0; i < unparsed.size(); i++){
+	    	  row[i] = Integer.parseInt(unparsed.get(i));
 	      }
 	      
-	      ret[rowNum] = row;
-	      rowNum++;
+	      temp.add(row);
 	    }
 		
+		int[][] ret = new int[temp.size()][temp.get(0).length];
 		return ret;
 	}
 	
