@@ -53,8 +53,13 @@ public class Point {
 		return val;
 	}
 	
+	@Override
 	public boolean equals(Object o){
 		return ((Point)o).getR() == r && ((Point)o).getC() == c && ((Point)o).getVal() == val; 
 	}
 	
+	@Override
+	public String toString(){
+		return "" + val;
+	}
 }
