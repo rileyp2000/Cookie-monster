@@ -5,17 +5,33 @@
  */
 public class Point {
 	private int r,c,val;
+	private int currentCookies;
 	
 	public Point(int row, int col, int value) {
 		r = row;
 		c = col;
 		val = value;
+		currentCookies = 0;
 	}
 	
 	public Point(Point p){
 		r = p.getR();
 		c = p.getC();
 		val = p.getVal();
+	}
+
+	/**
+	 * @return the currentCookies
+	 */
+	public int getCurrentCookies() {
+		return currentCookies;
+	}
+
+	/**
+	 * @param currentCookies the currentCookies to set
+	 */
+	public void setCurrentCookies(int currentCookies) {
+		this.currentCookies = currentCookies;
 	}
 
 	/**

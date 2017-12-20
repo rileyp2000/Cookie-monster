@@ -12,6 +12,7 @@ import java.util.Scanner;
  *
  */
 public class PathFinder {
+	
 	private Point[][] grid;
 	private LinkedList<Point> junctions;
 	private Point current;
@@ -37,11 +38,54 @@ public class PathFinder {
 		numCookies = 0;
 		maxCookies = new ArrayList<Integer>();
 		junctions = new LinkedList<Point>();
-
+			
 		System.out.println("The Max number of possible cookies is: " + run());
 
 		kybd.close();
 	}
+
+	/**
+	 * @return the grid
+	 */
+	public Point[][] getGrid() {
+		return grid;
+	}
+
+	/**
+	 * @return the junctions
+	 */
+	public LinkedList<Point> getJunctions() {
+		return junctions;
+	}
+
+	/**
+	 * @return the current
+	 */
+	public Point getCurrent() {
+		return current;
+	}
+
+	/**
+	 * @return the maxCookies
+	 */
+	public ArrayList<Integer> getMaxCookies() {
+		return maxCookies;
+	}
+
+	/**
+	 * @return the numCookies
+	 */
+	public int getNumCookies() {
+		return numCookies;
+	}
+
+	/**
+	 * @return the gOAL
+	 */
+	public Point getGOAL() {
+		return GOAL;
+	}
+	
 
 	/**
 	 * converts the 2D array of ints from createGrid into using points
@@ -95,6 +139,7 @@ public class PathFinder {
 
 			temp.add(row);
 		}
+		
 		int[][] ret = new int[temp.size()][temp.get(0).length];
 		for (int i = 0; i < temp.size(); i++)
 			ret[i] = temp.get(i);
@@ -126,7 +171,7 @@ public class PathFinder {
 	 * 
 	 * @return Returns a copy of the point to the right of the current one
 	 */
-	public Point peekRight() {
+	private Point peekRight() {
 		Point ret;
 		try {
 			ret = new Point(grid[current.getR()][current.getC() + 1]);
@@ -140,7 +185,7 @@ public class PathFinder {
 	 * 
 	 * @return Returns a copy of the point under the current one
 	 */
-	public Point peekDown() {
+	private Point peekDown() {
 		Point ret;
 		try {
 			ret = new Point(grid[current.getR() + 1][current.getC()]);
@@ -150,8 +195,14 @@ public class PathFinder {
 		return ret;
 
 	}
-
-	public int run() {
+	
+	/**
+	 * runs the code to find the max path
+	 * 
+	 *
+	 *void
+	 */
+	private int run() {
 		boolean ifTerminated;
 		int cookieMax = 0;
 		do {
@@ -174,14 +225,16 @@ public class PathFinder {
 		} else {
 			if (!junctions.isEmpty()) {
 				current = junctions.pop();
+				numCookies = current.getCurrentCookies();
 				run();
 			}
 		}
-
-		if (cookieMax == 0) {
+		
+		/*if (cookieMax == 0) {
 			System.out.println("No Possible solutions!!!");
 			System.exit(1);
-		}
+		}*/
+		//System.out.println(maxCookies);
 		return cookieMax;
 	}
 
@@ -217,6 +270,12 @@ public class PathFinder {
 			return 1;
 	}
 
+	/**
+	 * 
+	 * @return if it cannot move again
+	 *
+	 *boolean
+	 */
 	public boolean moveNext() {
 		numCookies += current.getVal();
 
@@ -224,14 +283,18 @@ public class PathFinder {
 			return true;
 
 		if (determineNext() == 0 && peekRight().getVal() != -1) {
-			junctions.push(peekRight());
+			Point temp = peekDown();
+			temp.setCurrentCookies(numCookies);
+			junctions.push(temp);
 			current = peekDown();
 		} else {
 			if (determineNext() == 0)
 				current = peekDown();
 			else {
 				if (determineNext() == 1 && peekDown().getVal() != -1) {
-					junctions.push(peekDown());
+					Point temp = peekDown();
+					temp.setCurrentCookies(numCookies);
+					junctions.push(temp);
 					current = peekRight();
 				} else {
 					if (determineNext() == 1)
