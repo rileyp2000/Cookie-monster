@@ -24,10 +24,13 @@ public class PathFinder {
 		GOAL = grid[grid.length-1][grid[0].length-1];
 		current = grid[0][0];
 		numCookies = 0;
+		@SuppressWarnings("unused")
 		ArrayList<Integer> maxCookies = new ArrayList<Integer>();
 		junctions = new LinkedList<Point>();
 		
 		System.out.println("The Max number of possible cookies is: " + run());
+		
+		kybd.close();
 	}
 	
 	/**

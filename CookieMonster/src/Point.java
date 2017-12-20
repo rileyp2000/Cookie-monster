@@ -49,5 +49,8 @@ public class Point {
 		return val;
 	}
 	
+	public boolean equals(Object o){
+		return ((Point)o).getR() == r && ((Point)o).getC() == c && ((Point)o).getVal() == val; 
+	}
 	
 }
