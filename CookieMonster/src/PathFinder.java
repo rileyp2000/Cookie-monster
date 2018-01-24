@@ -12,7 +12,7 @@ import java.util.Scanner;
  *
  */
 public class PathFinder {
-	private Point[][] grid;
+	private int[][] grid;
 	private LinkedList<Point> junctions;
 	private Point current;
 	private ArrayList<Integer> maxCookies;
@@ -25,15 +25,15 @@ public class PathFinder {
 		String fileName = kybd.nextLine();
 		Scanner fileGrid = fileReader(fileName);
 
-		grid = convertGrid(fileGrid);
+		grid = createGrid(fileGrid);
 		/*
 		 * for(int r = 0; r < grid.length; r++){ for(int c = 0; c <
 		 * grid[0].length; c++){ System.out.println(grid[r][c]); }
 		 * System.out.println(); }
 		 */
 
-		GOAL = grid[grid.length - 1][grid[0].length - 1];
-		current = grid[0][0];
+		GOAL = new Point(grid.length - 1,grid[0].length - 1, grid[grid.length - 1][grid[0].length - 1]);
+		current = new Point(0,0,grid[0][0]);
 		numCookies = 0;
 		maxCookies = new ArrayList<Integer>();
 		junctions = new LinkedList<Point>();
@@ -41,28 +41,6 @@ public class PathFinder {
 		System.out.println("The Max number of possible cookies is: " + run());
 
 		kybd.close();
-	}
-
-	/**
-	 * converts the 2D array of ints from createGrid into using points
-	 * 
-	 * @param fileGrid
-	 *            scanner containing the maze
-	 * @return a 2D array of points that represent the maze
-	 */
-	public Point[][] convertGrid(Scanner fileGrid) {
-
-		int[][] unconvert = createGrid(fileGrid);
-		// System.out.println(unconvert);
-		Point[][] ret = new Point[unconvert.length][unconvert[0].length];
-
-		for (int r = 0; r < unconvert.length; r++) {
-			for (int c = 0; c < unconvert[0].length; c++) {
-				ret[r][c] = new Point(r, c, unconvert[r][c]);
-			}
-		}
-
-		return ret;
 	}
 
 	/**
@@ -122,10 +100,22 @@ public class PathFinder {
 		return daGrid;
 	}
 
-	/**
+	public int run(){
+		do{
+			
+		}while(!junctions.isEmpty())
+	}
+	
+	
+	
+	
+	
+	
+	/*
+	*//**
 	 * 
 	 * @return Returns a copy of the point to the right of the current one
-	 */
+	 *//*
 	public Point peekRight() {
 		Point ret;
 		try {
@@ -135,11 +125,10 @@ public class PathFinder {
 		}
 		return ret;
 	}
-
-	/**
+	*//**
 	 * 
 	 * @return Returns a copy of the point under the current one
-	 */
+	 *//*
 	public Point peekDown() {
 		Point ret;
 		try {
@@ -185,25 +174,25 @@ public class PathFinder {
 		return cookieMax;
 	}
 
-	/**
+	*//**
 	 * 
 	 * @return 0 if down, 1 if right, -1 if not possible for next moves
-	 */
+	 *//*
 	public int determineNext() {
 		int downVal, rightVal;
-		/*
+		
 		 * try{ downVal = grid[current.getR()+1][current.getC()].getVal(); }
 		 * catch(IndexOutOfBoundsException e){ downVal = -1; }
-		 */
+		 
 		if (peekDown().getC() == -1)
 			downVal = -1;
 		else
 			downVal = peekDown().getVal();
 
-		/*
+		
 		 * try{ rightVal = grid[current.getR()][current.getC()+1].getVal(); }
 		 * catch(IndexOutOfBoundsException e){ rightVal = -1; }
-		 */
+		 
 		if (peekRight().getC() == -1)
 			rightVal = -1;
 		else
@@ -241,5 +230,5 @@ public class PathFinder {
 		}
 		return false;
 	}
-
+*/
 }
