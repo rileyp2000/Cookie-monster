@@ -32,8 +32,8 @@ public class PathFinder {
 		 * System.out.println(); }
 		 */
 
-		GOAL = new Point(grid.length - 1,grid[0].length - 1, grid[grid.length - 1][grid[0].length - 1]);
-		current = new Point(0,0,grid[0][0]);
+		GOAL = new Point(grid.length - 1, grid[0].length - 1, grid[grid.length - 1][grid[0].length - 1]);
+		current = new Point(0, 0, grid[0][0]);
 		numCookies = 0;
 		maxCookies = new ArrayList<Integer>();
 		junctions = new LinkedList<Point>();
@@ -100,135 +100,113 @@ public class PathFinder {
 		return daGrid;
 	}
 
-	public int run(){
-		do{
-			
-		}while(!junctions.isEmpty())
+	public int run() {
+		numCookies = 0;
+		do {
+			if (peekRight() != -1 && peekDown() != -1) {
+				junctions.push(new Point(current.getR(), current.getC() + 1, grid[current.getR()][current.getC() + 1]));
+				current = new Point(current.getR() + 1, current.getC(), grid[current.getR() + 1][current.getC()]);
+				numCookies += current.getVal();
+			} else {
+				if (peekRight() == -1) {
+					current = new Point(current.getR() + 1, current.getC(), grid[current.getR() + 1][current.getC()]);
+					numCookies += current.getVal();
+				} else {
+					current = new Point(current.getR(), current.getC() + 1, grid[current.getR()][current.getC() + 1]);
+					numCookies += current.getVal();
+				}
+			}
+
+		} while (peekRight() != -1 || peekDown() != -1);
+
+		if (current.equals(GOAL))
+			maxCookies.add(numCookies);
+		if (!junctions.isEmpty()) {
+			current = junctions.pop();
+			run();
+		}
+
+		int totMax = maxCookies.get(0);
+		for (Integer i : maxCookies) {
+			if (i > totMax)
+				totMax = i;
+		}
+		return totMax;
 	}
-	
-	
-	
-	
-	
-	
-	/*
-	*//**
+
+	/**
 	 * 
 	 * @return Returns a copy of the point to the right of the current one
-	 *//*
-	public Point peekRight() {
-		Point ret;
+	 */
+	public int peekRight() {
+		int ret;
 		try {
-			ret = new Point(grid[current.getR()][current.getC() + 1]);
+			ret = grid[current.getR()][current.getC() + 1];
 		} catch (IndexOutOfBoundsException e) {
-			ret = new Point(-1, -1, -1);
+			ret = -1;
 		}
 		return ret;
 	}
-	*//**
+
+	/**
 	 * 
 	 * @return Returns a copy of the point under the current one
-	 *//*
-	public Point peekDown() {
-		Point ret;
+	 */
+	public int peekDown() {
+		int ret;
 		try {
-			ret = new Point(grid[current.getR() + 1][current.getC()]);
+			ret = grid[current.getR() + 1][current.getC()];
 		} catch (IndexOutOfBoundsException e) {
-			ret = new Point(-1, -1, -1);
+			return -1;
 		}
 		return ret;
-
 	}
 
-	public int run() {
-		boolean ifTerminated;
-		int cookieMax = 0;
-		do {
-			ifTerminated = moveNext();
-		} while (!ifTerminated);
-
-		if (current.equals(GOAL)) {
-			maxCookies.add(numCookies);
-			numCookies = 0;
-			if (!junctions.isEmpty()) {
-				current = junctions.pop();
-				run();
-			} else {
-				cookieMax = maxCookies.get(0);
-				for (int i = 1; i < maxCookies.size(); i++) {
-					if (maxCookies.get(i) > cookieMax)
-						cookieMax = maxCookies.get(i);
-				}
-			}
-		} else {
-			if (!junctions.isEmpty()) {
-				current = junctions.pop();
-				run();
-			}
-		}
-
-		if (cookieMax == 0) {
-			System.out.println("No Possible solutions!!!");
-			System.exit(1);
-		}
-		return cookieMax;
-	}
-
-	*//**
+	/*
+	 * public int run() { boolean ifTerminated; int cookieMax = 0; do {
+	 * ifTerminated = moveNext(); } while (!ifTerminated);
 	 * 
-	 * @return 0 if down, 1 if right, -1 if not possible for next moves
-	 *//*
-	public int determineNext() {
-		int downVal, rightVal;
-		
+	 * if (current.equals(GOAL)) { maxCookies.add(numCookies); numCookies = 0;
+	 * if (!junctions.isEmpty()) { current = junctions.pop(); run(); } else {
+	 * cookieMax = maxCookies.get(0); for (int i = 1; i < maxCookies.size();
+	 * i++) { if (maxCookies.get(i) > cookieMax) cookieMax = maxCookies.get(i);
+	 * } } } else { if (!junctions.isEmpty()) { current = junctions.pop();
+	 * run(); } }
+	 * 
+	 * if (cookieMax == 0) { System.out.println("No Possible solutions!!!");
+	 * System.exit(1); } return cookieMax; }
+	 * 
+	 *//**
+		 * 
+		 * @return 0 if down, 1 if right, -1 if not possible for next moves
+		 *//*
+		 * public int determineNext() { int downVal, rightVal;
+		 * 
 		 * try{ downVal = grid[current.getR()+1][current.getC()].getVal(); }
 		 * catch(IndexOutOfBoundsException e){ downVal = -1; }
-		 
-		if (peekDown().getC() == -1)
-			downVal = -1;
-		else
-			downVal = peekDown().getVal();
-
-		
+		 * 
+		 * if (peekDown().getC() == -1) downVal = -1; else downVal =
+		 * peekDown().getVal();
+		 * 
+		 * 
 		 * try{ rightVal = grid[current.getR()][current.getC()+1].getVal(); }
 		 * catch(IndexOutOfBoundsException e){ rightVal = -1; }
-		 
-		if (peekRight().getC() == -1)
-			rightVal = -1;
-		else
-			rightVal = peekRight().getVal();
-
-		if (downVal == -1 && rightVal == -1)
-			return -1;
-		if (downVal > rightVal)
-			return 0;
-		else
-			return 1;
-	}
-
-	public boolean moveNext() {
-		numCookies += current.getVal();
-
-		if (determineNext() == -1)
-			return true;
-
-		if (determineNext() == 0 && peekRight().getVal() != -1) {
-			junctions.push(peekRight());
-			current = peekDown();
-		} else {
-			if (determineNext() == 0)
-				current = peekDown();
-			else {
-				if (determineNext() == 1 && peekDown().getVal() != -1) {
-					junctions.push(peekDown());
-					current = peekRight();
-				} else {
-					if (determineNext() == 1)
-						current = peekRight();
-				}
-			}
-		}
-		return false;
-	}
-*/
+		 * 
+		 * if (peekRight().getC() == -1) rightVal = -1; else rightVal =
+		 * peekRight().getVal();
+		 * 
+		 * if (downVal == -1 && rightVal == -1) return -1; if (downVal >
+		 * rightVal) return 0; else return 1; }
+		 * 
+		 * public boolean moveNext() { numCookies += current.getVal();
+		 * 
+		 * if (determineNext() == -1) return true;
+		 * 
+		 * if (determineNext() == 0 && peekRight().getVal() != -1) {
+		 * junctions.push(peekRight()); current = peekDown(); } else { if
+		 * (determineNext() == 0) current = peekDown(); else { if
+		 * (determineNext() == 1 && peekDown().getVal() != -1) {
+		 * junctions.push(peekDown()); current = peekRight(); } else { if
+		 * (determineNext() == 1) current = peekRight(); } } } return false; }
+		 */
 }
